@@ -1,0 +1,17 @@
+﻿Variable,Definition
+creator_id,Unique identifier for each creator.
+session,Session number for a specific creator (incremented for each new session).
+dow,"Day of the week the session occurred (1 = Sunday, 7 = Saturday)."
+start_hour,"Hour the session started (24-hour format, ranging from 0 to 23)."
+duration,Duration of the live stream session in minutes.
+unq_viewers,Number of unique viewers who attended the session.
+avg_viewers,Average number of viewers present during the session.
+5min_viewers,Number of viewers who stayed for at least 5 minutes.
+sponsored,"Binary indicator of whether the session was sponsored (1 = sponsored, 0 = not sponsored)."
+sp_cost,Sponsorship cost in USD (only present if sponsored = 1).
+active_users_1h,Number of active users within one hour after the session ended.
+active_users_3h,Number of active users within three hours after the session ended.
+purchases_1h,Number of purchases made within one hour after the session ended.
+purchases_3h,Number of purchases made within three hours after the session ended.
+creator_female,"Binary indicator of creator gender (1 = female, 0 = male)."
+creator_followers,Number of followers the creator had at the start of the session.

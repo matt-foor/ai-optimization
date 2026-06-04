@@ -1,0 +1,29 @@
+﻿Variable,Definition,Period
+account_id,Unique identifier of the game player.,Calibration period
+matches,Number of matches played.,Calibration period
+active_days,"Number of active days. (i.e., distinct days with at least one activity)",Calibration period
+wins,"Number of matches with ""win"" outcomes (there are only two outcomes: wins and losses).",Calibration period
+kills,"Number of kills recorded, referring to the killing of actual players on the opposing team.",Calibration period
+kills_bots,"Number of ""robot"" kills recorded (e.g., minions).",Calibration period
+assists,"Number of attack activities that ultimately led to kills by other players, where you contributed.",Calibration period
+deaths,Number of deaths tallied.,Calibration period
+pmins,Abbreviation for play minutes: Total play minutes recorded.,Calibration period
+golds,"Gold (in-game currency) compensated, serving as a proxy for in-game performance.",Calibration period
+unq_maps,Unique maps played: Number of distinct maps played by this user.,Calibration period
+unq_chrs,"Unique characters played: Number of distinct characters (i.e., heroes) played by this user.",Calibration period
+avg_matches_pd,Average matches played per day: Calculated as matches divided by active days.,Calibration period
+max_matches_pd,The greatest number of matches played by the user on a single day.,Calibration period
+max_wins_pd,The greatest number of wins achieved by the user on a single day.,Calibration period
+lw_match_rate,The ratio of matches played during the last week of the calibration period: matches during the last week divided by total matches.,Calibration period
+days_since_last_sign_in,Days passed since the last activity up to the first day of the prediction period.,Calibration period
+days_since_sign_up,Days passed since sign-up up to the first day of the prediction period.,Calibration period
+purchase_amt,Purchase amount in U.S. dollars.,Calibration period
+purchase_freq,"Purchase frequency (i.e., number of purchases).",Calibration period
+has_premium,"Indicates whether the user purchased an item that provides access to all game characters, known as a premium feature.",Calibration period
+chat_rate_pm,Chat rate per match: Average number of chats typed by the user per match.,Calibration period
+time_to_first_play,Number of minutes taken for the user to play their first match from the sign-up time. ,Calibration period
+high_spd_internet,Indicates whether a high-speed fiber internet connection is detected (1) or not (0).,Calibration period
+resolution,"Graphic setting: a = low resolution, b = baseline resolution, c = high resolution, d = super high resolution.",Calibration period
+tutorial_progress,"Progress of completed tutorial, where zero means 0% and one means 100%.",Calibration period
+dv_purchase_amt,Dependent variable: purchase amount in US dollar,Prediction period
+dv_churn,Dependent variable: whether the user has churned (one) or not. ,Prediction period
