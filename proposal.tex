@@ -1,0 +1,280 @@
+%% proposal_template.tex
+%% MGMT 590-037 — AI-Enhanced Optimization
+%% Final Project Proposal — Student Submission Template
+%%
+%% INSTRUCTIONS:
+%%   1. Fill in every section between the %%--- FILL IN ---%%  markers.
+%%   2. Do NOT change section headings, the header block, or page formatting.
+%%   3. Compile to PDF and push to Summer2026/Team_XX/proposal/proposal.pdf
+%%   4. Target length: 3–4 pages (not counting the team table or references).
+
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in, top=0.85in, bottom=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{mdframed}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage[expansion=false]{microtype}
+\usepackage{hyperref}
+
+\definecolor{navyblue}{HTML}{1B2A4A}
+\definecolor{iceblue}{HTML}{CADCFC}
+\definecolor{goldyellow}{HTML}{F5A623}
+\definecolor{lightgray}{HTML}{F4F6FB}
+
+\hypersetup{colorlinks=true, linkcolor=navyblue, urlcolor=navyblue}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{7pt}
+
+\titleformat{\section}{\large\bfseries\color{navyblue}}{}{0em}{}[\vspace{-2pt}\rule{\linewidth}{0.7pt}\vspace{2pt}]
+
+%% Hint box — shows instructional notes in gray; remove or comment out before submitting
+\newmdenv[
+  backgroundcolor=lightgray,
+  linecolor=iceblue,
+  linewidth=1pt,
+  leftline=true, rightline=false, topline=false, bottomline=false,
+  innerleftmargin=8pt, innerrightmargin=6pt,
+  innertopmargin=5pt, innerbottommargin=5pt,
+  skipabove=4pt, skipbelow=4pt,
+  font=\small\itshape\color{gray}
+]{hint}
+
+\begin{document}
+
+%% ── Header ───────────────────────────────────────────────────────────────────
+\begin{center}
+  {\small\color{navyblue}
+    MGMT 590-037 \;·\; AI-Enhanced Optimization \;·\; Daniels School of Business}\\[5pt]
+  {\LARGE\bfseries\color{navyblue} Final Project Proposal}\\[4pt]
+  {\large\itshape Prediction to Prescription: Building an AI Agent}\\[5pt]
+  %%--- FILL IN: Team number, project title, submission date ---%%
+  {\small
+    \textbf{Team:} 1 \quad
+    \textbf{Project Title:} Optimizing Twitch Sponsorship Spend for Conversions \quad
+    \textbf{Date:} 31 May 2026}
+\end{center}
+
+\vspace{4pt}\hrule height 1.5pt\vspace{10pt}
+
+%% ── Team Table ───────────────────────────────────────────────────────────────
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+\textbf{Name} & \textbf{Email} & \textbf{Program} & \textbf{Primary Role} \\
+\midrule
+%%--- FILL IN: One row per team member ---%%
+\textit{Member 1 Shubh Vaishnav} & \textit{vaishnav@purdue.edu} & \textit{MSBAIM} & \textit{Project Owner} \\
+\textit{Member 2 Nick Sopcic} & \textit{nsopcic@purdue.edu} & \textit{MSBAIM} & \textit{Component owner} \\
+\textit{Member 3 Ethin DalPian} & \textit{edalpian@purdue.edu} & \textit{MSBAIM} & \textit {Data Collection \& Preparation} \\
+\textit{Member 4 Matt Foor} & \textit{foor0@purdue.edu} & \textit{MSBAIM} & \textit{Component owner} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{6pt}
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Section 1 — Problem Statement and Business Context}
+
+\begin{hint}
+  Describe the class of business problem your agent will tackle --- in plain
+  language, without writing down a formal optimization model.
+  Your agent will generate the problem formulation; your job here is to give
+  it a clear, well-motivated problem to work on.
+  Aim for 1--1.5 pages across the three subsections below.
+\end{hint}
+
+%%--- FILL IN ---%%
+
+\subsection*{1.1 \; Business Context}
+
+Our agent is designed for a game studio that markets through Twitch creators. Creators run live streaming sessions, and the studio can sponsor a session at a cost in order to drive purchases from the creator's audience. The marketing manager holds a fixed sponsorship budget each period and must decide which creators to sponsor and how much to spend, with the goal of maximizing the purchases that sponsorship actually causes. Today the studio sponsors roughly half of available sessions with no systematic targeting, so spend is spread across creators regardless of how much incremental purchasing each sponsorship drives. High reach creators tend to get funded because they look impressive, even when their audience would have purchased anyway, and the manager has no reliable way to separate that baseline buying from the genuine lift produced by paying for the sponsorship.
+
+\subsection*{1.2 \; Problem Class}
+
+This is a \emph{budget allocation problem with diminishing returns} applied to advertising spend. Each period the manager chooses how much sponsorship budget to direct at each creator segment (continuous and non negative). The goal is to maximize the incremental conversions, the purchases caused by sponsorship rather than the purchases that would have happened regardless. The decision is limited by a fixed total budget and optional per segment spending caps. The uncertainty lies in the response curves, the relationship between sponsorship spend and incremental conversions for each segment, which is unknown and must be estimated from data. The problem is concave because each segment saturates: paying more lifts conversions at a decreasing rate. A discrete variant of the same problem, choosing which individual creators to sponsor under a budget, is a selection (knapsack) problem, and our agent supports both framings.
+
+\subsection*{1.3 \; Why This Problem Is Hard Without an Agent}
+
+The problem is hard without an agent for three reasons. First, the effect of sponsorship is confounded and noisy: purchases occur with or without sponsorship, so a manager cannot eyeball the incremental lift per dollar from the raw numbers, and the creators who get sponsored are not chosen at random. Second, the constraints interact: a single budget must be split across many creators whose marginal effectiveness differs and diminishes with spend, which is a nonlinear resource allocation problem rather than a ranking. Third, the situation changes constantly: the creator roster, audiences, and costs shift period to period, so any fixed split goes stale and manual reoptimization is impractical. The agent will outperform current practice by estimating an incremental response curve for each segment, solving the constrained allocation exactly, and adapting as new session data arrives. Success will be measured by higher incremental conversions on held out creators and sessions compared with the studio's current sponsorship pattern.
+
+%%--- END FILL IN ---%%
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Section 2 — Data Plan}
+
+\begin{hint}
+  Identify every real dataset you will use. For each one, provide the source,
+  approximate size, key features, and how it connects to the uncertain parameters
+  in your model. Explain your train/test split strategy. Aim for 0.5--1 page.
+\end{hint}
+
+%%--- FILL IN ---%%
+
+\subsection*{2.1 \; Primary Dataset}
+
+\begin{tabular}{@{}p{3.5cm}p{9.5cm}@{}}
+\toprule
+\textbf{Field} & \textbf{Details} \\
+\midrule
+Dataset name   & Twitch creator session data (\texttt{twitch\_df}) \\
+Source         & Course provided \\
+Approximate size & 39,928 sessions across 2,000 creators, 16 columns \\
+Key features   & Session timing (day of week, start hour, duration), audience (unique viewers, average viewers, five minute viewers, creator followers), creator gender; sponsorship treatment (\texttt{sponsored}, \texttt{sp\_cost} in USD, present only when sponsored) \\
+Outcome variable & \texttt{purchases\_3h} (purchases in the three hours after a session); \texttt{purchases\_1h} used as a robustness check \\
+Known limitations & Sponsorship is not randomized, so creators self select into being sponsored and incremental estimates must adjust for observed confounders; \texttt{sp\_cost} exists only for sponsored sessions; the post session \texttt{active\_users} fields are outcomes, not inputs, and are excluded as predictors \\
+\bottomrule
+\end{tabular}
+
+\subsection*{2.2 \; Additional Datasets}
+
+We also use the player game dataset, a training file of 12,000 players and a held out test file of 3,000 players described by the same codebook, whose prediction period dependent variables are \texttt{dv\_purchase\_amt} and \texttt{dv\_churn}. There is no row level key linking individual players to creators, so we do not merge the two sources. Instead, this dataset supplies the economic value of a conversion: a small value model estimates the expected purchase amount per converting user, with an optional churn adjusted retention factor, and that value is used to weight predicted Twitch conversion counts into expected revenue. This lets the optimizer trade off spend against revenue rather than against raw purchase counts while keeping Twitch conversions as the central outcome.
+
+\subsection*{2.3 \; Train / Test Split}
+
+For the Twitch data we use a grouped split on \texttt{creator\_id} so that no creator appears in both training and test. Creator level effects are strong, and an ordinary random split would leak a creator's behavior across the split and inflate our scores. We hold out a set of whole creators as the final test set and run grouped k fold cross validation on the remaining creators for model selection and hyperparameter tuning. For the player value model we use the provided 12,000 row training set with k fold cross validation and predict on the 3,000 row held out test set.
+
+%%--- END FILL IN ---%%
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Section 3 — Methods Sketch}
+
+\begin{hint}
+  Outline the technical approach for each agent component. You do not need final
+  answers --- but you must show end-to-end thinking from data input to decision
+  output. Address prediction, optimization, constraint handling, and baseline.
+  Aim for 1--1.5 pages.
+\end{hint}
+
+%%--- FILL IN ---%%
+
+\subsection*{3.1 \; Prediction Layer}
+
+The optimizer needs a smooth, concave curve of incremental conversions against sponsorship spend for each creator segment, while the raw data is a purchase count recorded per session together with whether and how much that session was sponsored. We keep a two stage hybrid design.
+
+\textbf{Stage 1: Session conversion and uplift model.} We train a gradient boosted regressor (XGBoost) to predict post session purchases from pre decision features only: creator followers, unique, average, and five minute viewers, duration, day of week, start hour, creator gender, the sponsorship indicator, and \texttt{sp\_cost}. Because purchases are large non negative counts, we fit a count appropriate loss such as Poisson or Tweedie deviance, or squared error on log purchases, rather than plain squared error, and we exclude the post session \texttt{active\_users} fields because they are outcomes rather than inputs. To recover the incremental effect of sponsorship rather than a raw prediction, we use an uplift framing: incremental conversions at spend $x$ are the predicted purchases when a session is sponsored at $x$ minus the predicted purchases for the same session left unsponsored. We will compare an S learner (a single model with the treatment as a feature) against a T learner (separate sponsored and unsponsored models) and keep whichever produces more stable lift estimates. Because sponsorship is not randomized, the lift is adjusted for observed creator and session characteristics, and we are explicit that residual unmeasured confounding is a limitation rather than claiming a clean causal effect.
+
+\textbf{Stage 2: Segment response curves.} We group creators into segments, for example by follower tier and typical audience size, aggregate the Stage 1 incremental predictions to the segment level, pair sponsorship spend with incremental conversions, and fit a concave saturation curve for each segment $s$. We use a Hill saturation form, $g_s(x) = \dfrac{V_s\, x^{n_s}}{K_s^{\,n_s} + x^{n_s}}$, with a logarithmic curve as a fallback, fit by nonlinear least squares using \texttt{scipy.optimize.curve\_fit}. The fitted parameters $V_s$ (saturation ceiling) and $K_s$ (half saturation point) are the uncertain inputs the optimizer searches over. The value model from Section 2.2 supplies an expected value per conversion, so the same curves can be expressed in incremental revenue as well as in incremental conversions.
+
+A single XGBoost model on its own is a poor fit for the prescription step: a tree ensemble outputs a step function that is non concave and non monotone, so feeding it to the allocator yields unstable spend that sits on flat or jagged regions of the surface. The parametric Stage 2 curve is what makes the allocation well posed, so we let XGBoost do the prediction and let the parametric layer supply a clean concave object for optimization.
+
+On the choice of loss, a count appropriate loss in Stage 1 and nonlinear least squares in Stage 2 are sufficient because the concave Stage 2 curve already aligns the prediction target with the downstream concave objective, and the modular seam keeps the pipeline transparent and easy to reparameterize for the Section 5.2 stakeholder change. A fully decision aware (SPO style) objective is noted as a stretch goal if time permits.
+
+\subsection*{3.2 \; Optimization Engine}
+
+We allocate the sponsorship budget across creator segments with \texttt{scipy.optimize.minimize} using Sequential Least Squares Programming (SLSQP), maximizing total incremental conversions (or incremental revenue), $\sum_s g_s(x_s)$, where each $g_s$ is the concave Stage 2 curve; because the solver minimizes, we pass it the negative of this sum. The summed objective is concave and the feasible region is convex, so the problem has a single global optimum in principle, and we wrap the solver in a multistart loop that runs from several random feasible starting allocations and keeps the best objective, which protects against numerical flat spots and any mild non concavity from an imperfect curve fit. The same agent supports the discrete variant, choosing which individual creators to sponsor under the budget, which is a knapsack problem; in that mode we switch from SLSQP to an integer program built with \texttt{PuLP}. Which mode runs is a field in the problem schema (Section 5.2). We keep CVXPY in reserve as a convex check on the continuous mode: when the fitted curves are cleanly concave, CVXPY should reproduce the SLSQP optimum, which validates both layers.
+
+\subsection*{3.3 \; Constraint Handling}
+
+We enforce every constraint as a hard constraint inside the solver rather than through penalty terms, so each allocation the agent proposes is feasible by construction. The continuous mode has four. First, a budget constraint, total sponsorship spend at most the period budget, $\sum_s x_s \le B$, written as an inequality because spending less is allowed once a segment's marginal lift is exhausted. Second, per segment caps, $0 \le x_s \le u_s$, passed as box bounds to prevent over concentration on a single segment. Third, non negativity, which the lower bound guarantees. Fourth, a minimum sponsorship size where a segment is funded, since observed \texttt{sp\_cost} floors near \$500 and a funded segment must clear that floor. The discrete mode adds binary selection constraints, which SLSQP cannot express directly and which the integer solver handles instead. We prefer hard constraints over penalties because penalties require tuning a weight, can leave small residual violations, and would muddy the explanation the agent gives the stakeholder.
+
+\subsection*{3.4 \; Baseline Comparison}
+
+The current practice we aim to beat is the studio's existing sponsorship pattern, roughly half of sessions funded with no incrementality targeting. We compare against two baselines: the observed historical allocation, and a reach chasing heuristic that spends on the highest follower creators first. Both are scored on the same held out creators with the same fitted response curves, so the only thing that differs is the allocation rule. Improvement is measured as the increase in incremental conversions, and in incremental revenue, of the agent's allocation over each baseline. Beating the reach chasing heuristic is the meaningful test, because chasing reach is precisely the mistake the manager makes today when audience size is confused with the lift that sponsorship actually buys.
+
+\subsection*{3.5 \; Pipeline Diagram}
+
+The data to decision flow has five stages. Session and creator records feed the Stage 1 conversion and uplift model, whose incremental estimates are aggregated and fit into concave segment response curves, which become the parameters the optimizer searches over, producing a sponsorship allocation together with a plain language explanation. The player value model feeds the objective so that conversions can be weighted by expected revenue.
+
+\begin{center}
+\small
+\textbf{Session + creator data} $\;\longrightarrow\;$
+\textbf{XGBoost uplift model (Stage 1)} $\;\longrightarrow\;$
+\textbf{Segment response curves (Stage 2)} $\;\longrightarrow\;$
+\textbf{scipy multistart optimizer} $\;\longrightarrow\;$
+\textbf{Allocation + explanation}
+\end{center}
+
+%%--- END FILL IN ---%%
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Section 4 — Team Roles}
+
+\begin{hint}
+  Assign each member a primary component. Every one of the five components must
+  be covered. Roles are not binding, but each member must have clear ownership.
+\end{hint}
+
+%%--- FILL IN ---%%
+
+\begin{center}
+\begin{tabular}{llp{6.2cm}}
+\toprule
+\textbf{Component} & \textbf{Primary Owner} & \textbf{Brief Description of Responsibility} \\
+\midrule
+Problem Formulation Module     & Shubh Vaishnav & Translates the sponsorship problem into decision variables, objective, and constraints, and maintains the problem schema including the continuous versus discrete decision mode. \\
+\addlinespace
+Data Collection \& Preparation & Ethin DalPian & Cleans the Twitch and player data, engineers pre decision session features, builds the creator segments, and derives the per conversion value from the player data. \\
+\addlinespace
+Prediction Layer               & Nick Sopcic & Builds the two stage predictor, the XGBoost conversion and uplift model and the concave segment response curves passed to the optimizer. \\
+\addlinespace
+Optimization Engine            & Matt Foor & Implements the scipy multistart solver and the integer alternative, encodes the budget and segment constraints, and returns the optimal allocation. \\
+\addlinespace
+Explanation \& Validation      & Shubh Vaishnav & Runs the bootstrap uplift test against the baselines and produces the plain language rationale the agent reports to the stakeholder. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{4pt}
+Of course our team will collaborate with each other throughout the project so shared ownership is always implied.
+
+%%--- END FILL IN ---%%
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Section 5 — Benchmark and Validation Plan}
+
+\begin{hint}
+  Explain how you will evaluate success on (a) your own problem and (b) the
+  instructor benchmark. For (a), state the metric and how you will interpret
+  it. For (b), explain how your agent can accept a new problem description as
+  input. Aim for 0.5 pages.
+\end{hint}
+
+%%--- FILL IN ---%%
+
+\subsection*{5.1 \; Evaluating Your Own Problem}
+
+Our primary metric is incremental conversions on the held out creators, with incremental revenue reported alongside it through the value weight. We compare the agent's allocation against the two baselines from Section 3.4 on the same held out creators and the same fitted curves, so any difference reflects the allocation rule alone. Because a single point estimate of uplift can be noisy, we establish success through a bootstrap over held out creators: we resample creators with replacement many times, recompute the conversion uplift of the agent over each baseline on every resample, and build a confidence interval for that uplift. We treat the result as a meaningful win when the lower bound of the interval stays above zero, meaning the agent beats the baseline consistently rather than on a lucky split, rather than fixing an arbitrary percentage threshold in advance. We report the median uplift, the interval, and the realized allocation so the size and direction of the spending shift are visible to the stakeholder.
+
+\subsection*{5.2 \; Stakeholder Robustness}
+
+Our agent is built so that the business reality lives in data, not in code. The pipeline reads a structured problem specification, and the model and solver are written against that specification rather than against fixed numbers.
+
+\begin{itemize}[leftmargin=2em, itemsep=3pt]
+  \item \textbf{What is parameterized.} The specification holds the period budget, the per segment caps, the segment definitions, the cost assumptions, the objective (conversions versus revenue, total versus incremental), and the decision mode (continuous spend across segments versus discrete selection of creators). The response curves, the constraint set, and the objective passed to the solver are all built from these fields at run time. Only the structural choices, the two stage architecture, the concave curve family, and the model classes, are fixed in code.
+  \item \textbf{How a new problem reaches the agent.} We use two layers. A human can edit the specification directly as a configuration dictionary, which is fast and unambiguous. In parallel, an LLM reads the instructor's natural language problem change and emits the same specification, so a plain English instruction such as a new cap on a creator tier, a switch to revenue, or a switch from continuous spend to discrete selection is translated into the structured fields automatically. A validation step checks the LLM output against the schema, the allowed ranges, and feasibility before anything reaches the solver, so a malformed or contradictory change is caught rather than silently solved.
+  \item \textbf{What the limits are.} Changes expressed in the existing vocabulary, a changed budget, a new or tightened cap, a switch between supported objectives, or a switch between the continuous and discrete modes, require no code change and solve again in seconds. Changes outside that vocabulary need real work. A brand new decision dimension, a non concave objective that breaks the continuous solver, or a constraint that needs data we do not have would require rebuilding the prediction or optimization layer, not just a new specification. We will be explicit with the stakeholder about which bucket a requested change falls into and what the business cost of the resulting reallocation is.
+\end{itemize}
+
+%%--- END FILL IN ---%%
+
+%% ── References ───────────────────────────────────────────────────────────────
+\section*{References (if any)}
+
+%%--- FILL IN: cite any papers, datasets, or methods you plan to use ---%%
+
+[1] \; Chen, T., \& Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System. In \textit{Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining}, 785--794.
+
+[2] \; Kunzel, S. R., Sekhon, J. S., Bickel, P. J., \& Yu, B. (2019). Metalearners for Estimating Heterogeneous Treatment Effects Using Machine Learning. \textit{Proceedings of the National Academy of Sciences}, 116(10), 4156--4165.
+
+[3] \; Jin, Y., Wang, Y., Sun, Y., Chan, D., \& Koehler, J. (2017). \textit{Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects}. Google Inc.
+
+[4] \; Course provided datasets: Twitch creator session data and player game data, with accompanying codebook (MGMT 590-037, Summer 2026).
+
+%%--- END FILL IN ---%%
+
+\vfill\hrule\vspace{4pt}
+{\small\color{navyblue}
+\textbf{Submit:} Push \texttt{proposal.pdf} to your team GitHub repo and share the link with \texttt{jaiswalp@purdue.edu}
+\hfill
+MGMT 590-037 \;|\; Project Proposal Template \;|\; Summer 2026}
+
+\end{document}
