@@ -1,0 +1,211 @@
+{
+  "section_1_1": {
+    "checks": {
+      "rows_eq_39928": true,
+      "cols_eq_16": true,
+      "creators_eq_2000": true,
+      "no_duplicate_sessions": true,
+      "no_unexpected_nulls": true,
+      "sponsored_binary": true,
+      "purchases_1h_nonneg_int": true,
+      "purchases_3h_nonneg_int": true,
+      "sp_cost_consistent_with_sponsored": true
+    },
+    "duplicate_sessions": 0,
+    "flag_cost_present_unsponsored": 0,
+    "flag_sponsored_no_cost": 0,
+    "sp_cost_null_count": 19900,
+    "n_sessions": 39928,
+    "n_creators": 2000
+  },
+  "section_1_3_kmeans_sweep": [
+    {
+      "k": 2,
+      "inertia": 5899.452425443325,
+      "silhouette": 0.26543455555741075
+    },
+    {
+      "k": 3,
+      "inertia": 4605.781358847005,
+      "silhouette": 0.25391840257364673
+    },
+    {
+      "k": 4,
+      "inertia": 4023.88999600617,
+      "silhouette": 0.22901448965267782
+    },
+    {
+      "k": 5,
+      "inertia": 3544.9854313485957,
+      "silhouette": 0.22885653496312566
+    },
+    {
+      "k": 6,
+      "inertia": 3152.518684266021,
+      "silhouette": 0.22158521005109702
+    },
+    {
+      "k": 7,
+      "inertia": 2829.1994296301673,
+      "silhouette": 0.22529243262162635
+    },
+    {
+      "k": 8,
+      "inertia": 2580.4462653762525,
+      "silhouette": 0.22295233186807556
+    }
+  ],
+  "section_1_3_segment_profile": [
+    {
+      "segment": 0,
+      "n_creators": 604,
+      "n_sessions": 12039,
+      "spon_rate": 0.605,
+      "med_followers": 99336,
+      "med_unq_viewers": 4999,
+      "spcost_p25": 1468,
+      "spcost_med": 2275,
+      "spcost_p75": 3226,
+      "spend_iqr_ratio": 0.77,
+      "FLAG_spon_rate": false,
+      "FLAG_narrow_spend": false
+    },
+    {
+      "segment": 1,
+      "n_creators": 574,
+      "n_sessions": 11249,
+      "spon_rate": 0.415,
+      "med_followers": 96419,
+      "med_unq_viewers": 4753,
+      "spcost_p25": 1462,
+      "spcost_med": 2280,
+      "spcost_p75": 3182,
+      "spend_iqr_ratio": 0.75,
+      "FLAG_spon_rate": false,
+      "FLAG_narrow_spend": false
+    },
+    {
+      "segment": 2,
+      "n_creators": 512,
+      "n_sessions": 10444,
+      "spon_rate": 0.472,
+      "med_followers": 125980,
+      "med_unq_viewers": 6324,
+      "spcost_p25": 1897,
+      "spcost_med": 2938,
+      "spcost_p75": 4089,
+      "spend_iqr_ratio": 0.75,
+      "FLAG_spon_rate": false,
+      "FLAG_narrow_spend": false
+    },
+    {
+      "segment": 3,
+      "n_creators": 310,
+      "n_sessions": 6196,
+      "spon_rate": 0.508,
+      "med_followers": 66074,
+      "med_unq_viewers": 3277,
+      "spcost_p25": 895,
+      "spcost_med": 1433,
+      "spcost_p75": 2051,
+      "spend_iqr_ratio": 0.81,
+      "FLAG_spon_rate": false,
+      "FLAG_narrow_spend": false
+    }
+  ],
+  "section_1_3_k_final": 4,
+  "section_1_4": {
+    "test_fraction_target": 0.15,
+    "n_train_creators": 1700,
+    "n_test_creators": 300,
+    "creator_overlap": 0,
+    "max_segment_share_gap": 0.0149,
+    "n_cv_folds": 5,
+    "segment_balance": [
+      {
+        "segment": 0,
+        "test": 0.31,
+        "train": 0.3006
+      },
+      {
+        "segment": 1,
+        "test": 0.29,
+        "train": 0.2865
+      },
+      {
+        "segment": 2,
+        "test": 0.2433,
+        "train": 0.2582
+      },
+      {
+        "segment": 3,
+        "test": 0.1567,
+        "train": 0.1547
+      }
+    ]
+  },
+  "section_1_5": {
+    "n_train_players": 12000,
+    "n_test_players": 3000,
+    "dv_present_in_train": [
+      "dv_purchase_amt",
+      "dv_churn"
+    ],
+    "dv_zero_share": 0.92108,
+    "n_spenders": 947,
+    "n_calibration_features": 26,
+    "calibration_features": [
+      "matches",
+      "active_days",
+      "wins",
+      "kills",
+      "kills_bots",
+      "assists",
+      "deaths",
+      "pmins",
+      "golds",
+      "unq_maps",
+      "unq_chrs",
+      "avg_matches_pd",
+      "max_matches_pd",
+      "avg_wins_pd",
+      "max_wins_pd",
+      "lw_match_rate",
+      "days_since_last_sign_in",
+      "days_since_sign_up",
+      "purchase_amt",
+      "purchase_freq",
+      "has_premium",
+      "chat_rate_pm",
+      "time_to_first_play",
+      "high_spd_internet",
+      "resolution",
+      "tutorial_progress"
+    ],
+    "outcome_cols": [
+      "dv_purchase_amt",
+      "dv_churn"
+    ]
+  },
+  "pre_decision_features": [
+    "creator_followers",
+    "unq_viewers",
+    "avg_viewers",
+    "5min_viewers",
+    "duration",
+    "dow",
+    "dow_sin",
+    "dow_cos",
+    "start_hour",
+    "creator_female",
+    "sponsored",
+    "sp_cost_model"
+  ],
+  "post_session_outcomes": [
+    "active_users_1h",
+    "active_users_3h",
+    "purchases_1h",
+    "purchases_3h"
+  ],
+  "random_state": 42
+}
