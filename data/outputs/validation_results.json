@@ -1,0 +1,96 @@
+{
+  "baseline_comparison": {
+    "total_spend": {
+      "Historical": 18577.011813339355,
+      "Reach-chasing": 20000.0,
+      "Agent": 20000.000000000004
+    },
+    "incr_conversions": {
+      "Historical": 9.71927505772575,
+      "Reach-chasing": 362.10045764793733,
+      "Agent": 367.58226750382636
+    },
+    "incr_revenue": {
+      "Historical": 27.209994978133487,
+      "Reach-chasing": 1013.7331823270465,
+      "Agent": 1029.0800078633047
+    },
+    "vs_historical_%": {
+      "Historical": 0.0,
+      "Reach-chasing": 3625.6,
+      "Agent": 3682.0
+    }
+  },
+  "bootstrap": {
+    "n_resamples": 1000,
+    "vs_historical": {
+      "median_uplift": 357.83855625946217,
+      "ci_95_lo": 357.42935051861446,
+      "ci_95_hi": 358.2966025162642,
+      "win": true
+    },
+    "vs_reach_chasing": {
+      "median_uplift": 5.481809855889026,
+      "ci_95_lo": 5.481809855889026,
+      "ci_95_hi": 5.481809855889026,
+      "win": true
+    }
+  },
+  "sensitivity": {
+    "budget_levels": [
+      {
+        "budget": 10000.0,
+        "objective": 10.594526071407216
+      },
+      {
+        "budget": 16000.0,
+        "objective": 10.594528218853405
+      },
+      {
+        "budget": 20000.0,
+        "objective": 10.594703734934921
+      },
+      {
+        "budget": 24000.0,
+        "objective": 371.1073577287253
+      },
+      {
+        "budget": 30000.0,
+        "objective": 371.1073577404013
+      }
+    ],
+    "binding_caps": [
+      2,
+      3
+    ],
+    "top_hill_param": {
+      "segment": 3,
+      "parameter": "V",
+      "max_abs_delta": 0.5481810259911164
+    },
+    "solver_robustness": [
+      {
+        "niter": 25,
+        "obj_BH": 371.10735676326107
+      },
+      {
+        "niter": 50,
+        "obj_BH": 371.10735676326107
+      },
+      {
+        "niter": 100,
+        "obj_BH": 371.10735685942103
+      },
+      {
+        "niter": 200,
+        "obj_BH": 371.10735685942103
+      },
+      {
+        "niter": 300,
+        "obj_BH": 371.1073568601766
+      }
+    ]
+  },
+  "explanation_test_1": "====================================================================\n  TWITCH SPONSORSHIP ALLOCATION RECOMMENDATION\n====================================================================\n  Budget   : $20,000\n  Objective: conversions\n  Solver   : basin-hopping\n\nFUNDED SEGMENTS\n--------------------------------------------------------------------\nSegment 0:\n  Recommended spend : $1,542 (25% of $6,173 cap)\n  Expected lift     : 1.5876 incremental conversions\n  Est. revenue      : $4.44\n  Curve assessment  : Spend of $1,542 is 32128% past the inflection point ($5). The segment has crossed into its diminishing-returns region -- marginal lift per dollar is decreasing.\n\nSegment 2:\n  Recommended spend : $14,612 (100% of $14,612 cap)\n  Expected lift     : 360.5128 incremental conversions\n  Est. revenue      : $1,009.29\n  Curve assessment  : NOTE: Hill fit for this segment hit the upper bound (n=20). Parameters are poorly identified and results should be treated as approximate.\n\nSegment 3:\n  Recommended spend : $3,846 (100% of $3,846 cap)\n  Expected lift     : 5.4818 incremental conversions\n  Est. revenue      : $15.35\n  Curve assessment  : This segment uses a concave (logarithmic) response curve. Every additional dollar yields fewer incremental conversions than the one before it.\n\nUNFUNDED SEGMENTS\n--------------------------------------------------------------------\n  Segment 1: not funded (optimal spend below $500 floor)\n\nSUMMARY\n--------------------------------------------------------------------\n  Total spend                : $20,000 of $20,000 budget\n  Total incremental conversions: 367.5823\n  Total incremental revenue  : $1,029.08\n\nMANAGERIAL GUIDANCE\n--------------------------------------------------------------------\n  Segment 2 delivers the highest absolute lift (360.5128). Prioritize execution quality here.\n  Segment 2 is at its spend cap. Expanding the creator pool in this segment could unlock additional conversions.\n  Segment 3 is at its spend cap. Expanding the creator pool in this segment could unlock additional conversions.\n====================================================================",
+  "explanation_test_2": "====================================================================\n  TWITCH SPONSORSHIP ALLOCATION RECOMMENDATION\n====================================================================\n  Budget   : $10,000\n  Objective: conversions\n  Solver   : basin-hopping\n\nFUNDED SEGMENTS\n--------------------------------------------------------------------\nSegment 0:\n  Recommended spend : $10,000 (100% of $10,000 cap)\n  Expected lift     : 169.9558 incremental conversions\n  Est. revenue      : $424.89\n  Curve assessment  : Spend of $10,000 is 181% past the inflection point ($3,563). The segment has crossed into its diminishing-returns region -- marginal lift per dollar is decreasing.\n\nUNFUNDED SEGMENTS\n--------------------------------------------------------------------\n  Segment 1: not funded (optimal spend below $500 floor)\n\nSUMMARY\n--------------------------------------------------------------------\n  Total spend                : $10,000 of $10,000 budget\n  Total incremental conversions: 169.9558\n  Total incremental revenue  : $424.89\n\nMANAGERIAL GUIDANCE\n--------------------------------------------------------------------\n  Segment 0 delivers the highest absolute lift (169.9558). Prioritize execution quality here.\n  Segment 0 is at its spend cap. Expanding the creator pool in this segment could unlock additional conversions.\n===================================================================="
+}
