@@ -1,0 +1,50 @@
+{
+  "budget": 20000.0,
+  "solver_winner": "basin-hopping",
+  "objective_value": 367.58226750382636,
+  "total_spend": 20000.000000000004,
+  "allocation": {
+    "0": {
+      "spend": 1542.0000000000034,
+      "lift": 1.5876258646328252,
+      "funded": true
+    },
+    "1": {
+      "spend": 0.0,
+      "lift": 0.0,
+      "funded": false
+    },
+    "2": {
+      "spend": 14612.0,
+      "lift": 360.51283152940647,
+      "funded": true
+    },
+    "3": {
+      "spend": 3846.0,
+      "lift": 5.481810109787089,
+      "funded": true
+    }
+  },
+  "discrete_selection": {
+    "funded_segments": [
+      1,
+      2,
+      3
+    ],
+    "total_spend": 19548.800000000003,
+    "total_lift": 353.119683403401
+  },
+  "benchmark": {
+    "bh_passes": true,
+    "slsqp_fails": true,
+    "f_ref": 169.95577903553303,
+    "f_bh": 169.95577903553303,
+    "f_slsqp": 111.69024571854058
+  },
+  "solver_params": {
+    "niter": 200,
+    "stepsize_pct_budget": 0.15,
+    "min_spend_floor": 500.0,
+    "ipw_clip_pct": 99
+  }
+}
