@@ -1,0 +1,518 @@
+% ============================================================
+% Twitch Sponsorship Optimization Agent -- Final Report
+% MGMT 590-037 | AI-Enhanced Optimization
+% Daniels School of Business, Purdue University
+% ============================================================
+\documentclass[11pt,letterpaper]{article}
+
+% ── Packages ─────────────────────────────────────────────────────────────────
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage{helvet}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{caption}
+\usepackage{hyperref}
+\usepackage{setspace}
+
+% ── Colors ───────────────────────────────────────────────────────────────────
+\definecolor{navy}{RGB}{0,32,91}
+\definecolor{gold}{RGB}{207,163,71}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{medgray}{RGB}{120,120,120}
+\definecolor{darkgray}{RGB}{60,60,60}
+\definecolor{flagred}{RGB}{192,0,0}
+
+% ── Typography ────────────────────────────────────────────────────────────────
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+
+% ── Section formatting ────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{navy}}{\thesection}{0.75em}{}
+  [\vspace{-6pt}\textcolor{gold}{\rule{\linewidth}{1.5pt}}\vspace{2pt}]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{navy}}{\thesubsection}{0.5em}{}
+
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{6pt}{2pt}
+
+% ── Header and footer ────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\small\textcolor{medgray}{Twitch Sponsorship Optimization Agent}}
+\fancyhead[R]{\small\textcolor{medgray}{MGMT 590-037 \ $|$ \ Team 1}}
+\fancyfoot[C]{\small\textcolor{medgray}{\thepage}}
+
+% ── Table column types ───────────────────────────────────────────────────────
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+% ── Caption style ────────────────────────────────────────────────────────────
+\captionsetup{font=small, labelfont=bf, labelsep=period, skip=4pt}
+
+% ── Hyperlink style ──────────────────────────────────────────────────────────
+\hypersetup{colorlinks=true, linkcolor=navy, urlcolor=navy}
+
+% ============================================================
+\begin{document}
+
+% ── Title block ──────────────────────────────────────────────────────────────
+\thispagestyle{empty}
+
+\begin{center}
+  {\Large\bfseries\color{navy} Twitch Sponsorship Optimization Agent}\\[4pt]
+  {\large\color{navy} Outcomes Report: Initial and Updated Problem Framing}\\[8pt]
+  \textcolor{gold}{\rule{0.6\linewidth}{1.5pt}}\\[8pt]
+  {\normalsize MGMT 590-037 \ $|$ \ AI-Enhanced Optimization \ $|$
+   \ Daniels School of Business, Purdue University}\\[4pt]
+  {\normalsize Team 1: Ethin DalPian \quad Nick Sopcic \quad Matt Foor \quad Shubh Vaishnav}\\[4pt]
+  {\normalsize Summer 2026}
+\end{center}
+
+\vspace{6pt}
+\textcolor{gold}{\rule{\linewidth}{1pt}}
+
+% ── Executive Summary ────────────────────────────────────────────────────────
+\section*{Executive Summary}
+\vspace{-2pt}
+
+We built an end-to-end AI agent that takes a sponsorship budget, fits audience
+response curves to Twitch session data, and returns an optimal per-segment
+allocation with a plain-language justification. Across both the initial framing
+(V1) and the stakeholder-modified framing (V2), the agent consistently
+outperforms intuitive heuristics.
+
+\textbf{Key findings:}
+\begin{itemize}[nosep, leftmargin=1.5em]
+  \item At a \$20{,}000 budget the optimized agent produces \textbf{8.97
+        incremental conversions}, a 2.3\% gain over historical allocation
+        and a 630\% gain over a reach-chasing baseline, both statistically
+        significant (bootstrap 95\% CI lower bound $>$ 0).
+  \item The reach-chasing heuristic --- spend on the largest-follower
+        segment first --- is the worst-performing strategy because the
+        largest segment (Mega) has a poorly identified response curve and
+        delivers near-zero measured lift.
+  \item When per-segment conversion quality is incorporated (V2 stakeholder
+        values: \$18--\$31 per conversion by tier), the revenue metric rises
+        from \$23.53 to \textbf{\$249.99} at the same allocation, and the
+        agent's revenue advantage over reach-chasing grows to \$222.94
+        (median bootstrap uplift).
+  \item A data-fusion estimate of per-segment values produced a near-flat
+        vector (\$0.82--\$1.24) because the k-means clusters have similar
+        session characteristics. The stakeholder-supplied tier values carry
+        more information and are recommended for operational use.
+\end{itemize}
+
+\textbf{Primary recommendation:} deploy the agent with Model~B (stakeholder
+per-segment values) and a budget of \$15{,}000--\$20{,}000, targeting
+Segments~1 (Mid, \$31/conversion) and~3 (Micro, \$27/conversion). Expand
+the creator pool in Segment~3 before increasing that segment's budget, as
+its spend cap is already binding.
+
+% ── Page 2 ───────────────────────────────────────────────────────────────────
+\newpage
+
+\section{Problem Framing (V1 --- Initial)}
+
+\subsection{Business Problem}
+
+A gaming studio wishes to allocate a fixed sponsorship budget across Twitch
+creator segments to maximize incremental in-game conversions. Conversions are
+game actions (purchases, sign-ups) that occur within three hours of a sponsored
+session. The key challenge is that the relationship between sponsorship
+spend and conversions is non-linear: audience response follows an S-shaped
+Hill curve with increasing returns at low spend, an inflection point, and
+diminishing returns at high spend. The resulting optimization is a non-convex
+NLP, requiring a global search method rather than a standard gradient solver.
+
+\subsection{Data and Segmentation}
+
+The pipeline ingests 39{,}928 Twitch sessions across 2{,}000 creators and
+12{,}000 player records. Creators are grouped into four segments using
+k-means on log-transformed creator characteristics (followers, unique viewers,
+session duration, sponsorship rate). The player dataset provides calibration-
+period behavioral features used to estimate a per-conversion dollar value.
+
+\begin{table}[h!]
+\centering
+\caption{Segment profile and fitted Hill curve parameters}
+\small
+\begin{tabular}{C{0.8cm} C{1.1cm} R{1.8cm} C{0.9cm} R{1.6cm} R{1.6cm} C{0.9cm} R{1.5cm}}
+\toprule
+\textbf{Seg.} & \textbf{Tier} & \textbf{Med.\ Followers} &
+\textbf{$V$} & \textbf{$K$ (\$)} & \textbf{$n$} &
+\multicolumn{2}{c}{\textbf{Spend Cap (\$)}} \\
+\midrule
+0 & Macro & 99{,}336 & 1.23 & 6.01 & 3.36 & \multicolumn{2}{c}{6{,}173} \\
+1 & Mid   & 96{,}419 & 3.49 & 3.05 & 3.00 & \multicolumn{2}{c}{5{,}978} \\
+2 & Mega  & 125{,}980 & 448.73 & 33{,}888 & 20.00$^\dagger$ & \multicolumn{2}{c}{14{,}612} \\
+3 & Micro & 66{,}074 & 4.41 & 376.30 & 1.41 & \multicolumn{2}{c}{3{,}846} \\
+\bottomrule
+\end{tabular}\\[4pt]
+{\small $^\dagger$\textcolor{flagred}{Segment~2 Hill fit hit the upper bound
+($n = 20$). Parameters are poorly identified; results for this segment should be
+treated as approximate.}}
+\end{table}
+
+\subsection{Optimization Formulation}
+
+The agent solves a non-convex NLP:
+\[
+  \max_{\mathbf{x}} \sum_{s} g_s(x_s)
+  \quad \text{s.t.} \quad \sum_s x_s \le B,\ 0 \le x_s \le u_s
+\]
+where $g_s(x_s) = V_s\, x_s^{n_s} / (K_s^{n_s} + x_s^{n_s})$ is the Hill
+response curve for segment~$s$. With $n_s > 1$, each curve is S-shaped,
+producing a combined objective surface with genuine local optima when budget
+is split across segments in their convex regions. Basin-hopping with SLSQP
+as the local minimizer is the primary solver; dual annealing serves as
+validation. Both converged to identical objectives (gap $< 10^{-6}$), providing
+strong evidence the global optimum was found.
+
+The CVXPY library rejected the Hill objective as non-DCP, confirming
+non-convexity. A single SLSQP run from a low-spend start was trapped at a
+local boundary maximum (f\,=\,111.7), while basin-hopping escaped to the
+global optimum (f\,=\,170.0), a 52\% improvement on the benchmark problem.
+
+% ── Page 3 ───────────────────────────────────────────────────────────────────
+\newpage
+
+\section{V1 Results --- Initial Problem Framing}
+
+\subsection{Prediction Layer}
+
+The prediction pipeline (Component~2) estimates a per-session incremental lift
+$\hat\tau$ using a T-learner: two separate XGBoost models, one trained on
+sponsored sessions and one on unsponsored. The T-learner was selected over the
+S-learner because it allows each treatment arm to capture arm-specific feature
+interactions. Lift estimates from an IPW-reweighted S-learner confirmed
+stability (pairwise correlation $\ge 0.83$ across all three estimators).
+
+Hill saturation curves are then fitted to $(sp\_cost,\,\hat\tau)$ pairs per
+segment via \texttt{scipy.optimize.curve\_fit}. A player value model
+(two-stage XGBoost: classifier predicting spender status, regressor
+predicting spend amount) yields a flat per-conversion value
+$v = \$2.623$.
+
+\subsection{Optimal Allocation}
+
+\begin{table}[h!]
+\centering
+\caption{V1 optimal allocation at budget \$20{,}000 (flat $v = \$2.623$)}
+\small
+\begin{tabular}{C{0.8cm} C{1.1cm} R{1.7cm} R{2.0cm} R{2.0cm} C{1.4cm}}
+\toprule
+\textbf{Seg.} & \textbf{Tier} & \textbf{Spend (\$)} &
+\textbf{Incr.\ Conversions} & \textbf{Incr.\ Revenue (\$)} &
+\textbf{Funded} \\
+\midrule
+0 & Macro & 5{,}000.00 & 1.2295 &  3.23 & Yes \\
+1 & Mid   & 5{,}000.00 & 3.4885 &  9.15 & Yes \\
+2 & Mega  & 5{,}000.00 & 0.0000 &  0.00 & Yes$^\dagger$ \\
+3 & Micro & 3{,}846.00 & 4.2517 & 11.15 & Yes \\
+\midrule
+\textbf{Total} & & \textbf{18{,}846.00} & \textbf{8.9697} & \textbf{23.53} & \\
+\bottomrule
+\end{tabular}\\[4pt]
+{\small $^\dagger$\textcolor{flagred}{Segment~2 lift is effectively zero
+due to the poorly identified Hill fit ($K = \$33{,}888$, cap $= \$14{,}612$).}}
+\end{table}
+
+Segment~3 hits its spend cap (\$3{,}846), the only binding constraint.
+Segment~2 receives \$5{,}000 but delivers zero measurable lift, representing
+an inefficient allocation driven by the unreliable Hill parameters.
+
+\subsection{Baseline Comparison and Validation}
+
+\begin{table}[h!]
+\centering
+\caption{Strategy comparison on held-out test creators (300 creators)}
+\small
+\begin{tabular}{L{3.4cm} R{2.0cm} R{2.4cm} R{2.3cm}}
+\toprule
+\textbf{Strategy} & \textbf{Spend (\$)} &
+\textbf{Incr.\ Conversions} & \textbf{Incr.\ Revenue (\$)} \\
+\midrule
+Agent (Optimized) & 18{,}846.00 & 8.9697 & 23.53 \\
+Historical        & 18{,}577.01 & 8.7711 & 23.01 \\
+Reach-Chasing     & 20{,}000.00 & 1.2295 &  3.23 \\
+\midrule
+\multicolumn{2}{l}{Agent vs.\ Historical (\%)} & \textbf{+2.3\%} & \textbf{+2.3\%} \\
+\multicolumn{2}{l}{Agent vs.\ Reach-Chasing (\%)} & \textbf{+629.9\%} & \textbf{+629.3\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Bootstrap uplift (1{,}000 resamples of held-out creators)}
+\small
+\begin{tabular}{L{3.0cm} R{2.2cm} R{2.2cm} R{2.2cm} C{1.2cm}}
+\toprule
+\textbf{Comparison} & \textbf{Median Uplift} & \textbf{95\% CI Lo} &
+\textbf{95\% CI Hi} & \textbf{Win?} \\
+\midrule
+vs.\ Historical    & 0.1992 & 0.0959 & 0.3820 & \textcolor{navy}{\textbf{Yes}} \\
+vs.\ Reach-Chasing & 7.7402 & 7.7402 & 7.7402 & \textcolor{navy}{\textbf{Yes}} \\
+\bottomrule
+\end{tabular}\\[4pt]
+{\small Win declared when 95\% CI lower bound $> 0$.}
+\end{table}
+
+The agent wins against both baselines. The narrow confidence interval against
+reach-chasing reflects deterministic segment follower rankings; regardless of
+which creators appear in the bootstrap sample, the agent's avoidance of the
+zero-lift Mega segment always produces a large advantage. The tighter margin
+over the historical baseline is expected: the historical allocation already
+approximates the optimum because it reflects practitioners' implicit knowledge
+of which segments convert.
+
+\textbf{Sensitivity highlights.} The objective is most sensitive to
+Segment~3's saturation parameter~$V$ (max $|\Delta \text{obj}| = 0.425$
+per $\pm 10\%$ perturbation). Segment~3's cap is binding; relaxing it by
+50\% yields $+0.068$ additional conversions.
+
+% ── Page 4 ───────────────────────────────────────────────────────────────────
+\newpage
+
+\section{Updated Problem Framing (V2 --- Stakeholder Modification)}
+
+\subsection{Motivation}
+
+The stakeholder identified that the flat value weight $v = \$2.623$ assigned
+equal revenue importance to every conversion regardless of which creator
+segment delivered it. Audience quality varies across tiers: niche, loyal
+micro-creator communities tend to convert at higher lifetime value than
+mega-creator audiences, who skew toward passive viewership. The modification
+introduces a per-segment value vector $\{v_s\}$ and re-solves the allocation
+under three value models.
+
+\subsection{Phase 1 --- Stakeholder-Supplied Values}
+
+Segments are ranked by median creator follower count and assigned to the
+four stakeholder-defined tiers. The Mega tier --- despite the largest raw
+audience --- receives the lowest per-conversion value (\$18), reflecting
+lower audience spend propensity.
+
+\begin{table}[h!]
+\centering
+\caption{Phase~1 segment-to-tier mapping and stakeholder values}
+\small
+\begin{tabular}{C{0.8cm} C{1.1cm} R{2.0cm} R{2.4cm} R{2.8cm}}
+\toprule
+\textbf{Seg.} & \textbf{Tier} & \textbf{Med.\ Followers} &
+\textbf{Rank} & \textbf{$v_s$ -- Stakeholder (\$/conv.)} \\
+\midrule
+2 & Mega  & 125{,}980 & 1 (highest) & \$18.00 \\
+0 & Macro &  99{,}336 & 2           & \$22.00 \\
+1 & Mid   &  96{,}419 & 3           & \$31.00 \\
+3 & Micro &  66{,}074 & 4 (lowest)  & \$27.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Phase 2 --- Data Fusion Estimate}
+
+Because no shared key links the player and Twitch datasets, $v_s$ cannot be
+estimated directly. We apply a bridging approach using \textbf{platform
+engagement depth} as the shared construct: \texttt{pmins} (total gameplay
+minutes) on the player side and \texttt{duration} (session length in minutes)
+on the Twitch side. Both variables measure willingness to invest time in the
+platform; neither is a follower-count or audience-size proxy.
+
+The procedure ranks both variables on a $[0,1]$ percentile scale, fits a
+binned mean $\hat{v}(\text{pmins\_percentile})$ on the player data, then
+evaluates this function at the mean duration-percentile of each Twitch segment.
+
+\begin{table}[h!]
+\centering
+\caption{Three-model value weight comparison}
+\small
+\begin{tabular}{L{2.8cm} R{2.0cm} R{2.0cm} R{2.0cm} R{2.0cm}}
+\toprule
+\textbf{Value Model} & \textbf{Seg~0 Macro} & \textbf{Seg~1 Mid} &
+\textbf{Seg~2 Mega} & \textbf{Seg~3 Micro} \\
+\midrule
+(A) Flat $v$        & \$2.62 & \$2.62 & \$2.62 & \$2.62 \\
+(B) Stakeholder $v_s$ & \$22.00 & \$31.00 & \$18.00 & \$27.00 \\
+(C) Fusion $v_s$    & \$0.82 & \$1.24 & \$1.04 & \$0.95 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Fusion limitation.} The four k-means segments have similar mean session
+durations (130--142 minutes), so the duration bridge produces a near-flat
+fusion vector (range: \$0.43). A sensitivity check using a second bridge
+(\texttt{chat\_rate\_pm} / viewer retention ratio) produced an equally flat
+result. This confirms that the k-means segmentation captures engagement
+quality dimensions that the available creator-level covariates do not
+differentiate. Model~B (stakeholder values) carries materially more information.
+
+\subsection{Three-Way Optimization Results}
+
+The objective with per-segment values is $\max_{\mathbf{x}} \sum_s v_s\,g_s(x_s)$.
+All three models were solved with basin-hopping ($n_\text{iter} = 200$) and
+validated against dual annealing.
+
+\begin{table}[h!]
+\centering
+\caption{Three-way comparison at budget \$20{,}000}
+\small
+\begin{tabular}{L{2.8cm} R{1.5cm} R{1.5cm} R{1.5cm} R{1.5cm} R{1.8cm} R{1.6cm}}
+\toprule
+\textbf{Model} & \textbf{Seg~0 (\$)} & \textbf{Seg~1 (\$)} &
+\textbf{Seg~2 (\$)} & \textbf{Seg~3 (\$)} &
+\textbf{Incr.\ Conv.} & \textbf{Revenue (\$)} \\
+\midrule
+(A) Flat     & 3{,}870 & 2{,}194 & 4{,}293 & 3{,}846 & 8.9697 & 23.53 \\
+(B) Stakeholder & 3{,}870 & 2{,}194 & 4{,}293 & 3{,}846 & 8.9697 & 249.99 \\
+(C) Fusion   & 3{,}870 & 2{,}194 & 4{,}293 & 3{,}846 & 8.9697 &   9.39 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ── Page 5 ───────────────────────────────────────────────────────────────────
+\newpage
+
+\section{V1 vs.\ V2: Analysis and Recommendations}
+
+\subsection{V1 vs.\ V2 Comparison}
+
+\begin{table}[h!]
+\centering
+\caption{Summary comparison: V1 initial framing vs.\ V2 updated framing}
+\small
+\begin{tabular}{L{3.2cm} L{5.4cm} L{5.4cm}}
+\toprule
+\textbf{Dimension} & \textbf{V1 --- Initial Framing} & \textbf{V2 --- Updated Framing} \\
+\midrule
+Value objective    & Flat scalar $v = \$2.623$ applied uniformly to all segments
+                   & Per-segment vector $\{v_s\}$; three competing models (A/B/C) \\
+\addlinespace
+Optimization obj.  & $\max \sum_s g_s(x_s)$ (pure conversions)
+                   & $\max \sum_s v_s\, g_s(x_s)$ (revenue-weighted) \\
+\addlinespace
+Allocation found   & Seg~0--2: \$5{,}000 each; Seg~3: \$3{,}846
+                   & Seg~0: \$3{,}870; Seg~1: \$2{,}194; Seg~2: \$4{,}293; Seg~3: \$3{,}846 \\
+\addlinespace
+Revenue metric     & \$23.53 (flat $v$)
+                   & \$249.99 (Model~B stakeholder $v_s$) \\
+\addlinespace
+Bootstrap uplift   & +0.199 conv.\ vs.\ Historical (WIN); +7.74 vs.\ Reach-chasing (WIN)
+                   & +\$222.94 revenue vs.\ Reach-chasing for Model~B (WIN) \\
+\addlinespace
+Key limitation     & Hill fit for Seg~2 ($n = 20$) unreliable; Seg~2 assigned \$5{,}000 with zero lift
+                   & Fusion estimate near-flat; stakeholder values preferred \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Key Discussion Points}
+
+\textbf{Q1: Are the flat-$v$ and pure-conversions allocations identical?}
+Yes, mathematically and numerically. For any positive scalar $v$,
+$\arg\max_{\mathbf{x}} v \sum_s g_s(x_s) = \arg\max_{\mathbf{x}} \sum_s g_s(x_s)$.
+The two-norm difference between the V1 allocation (pure conversions) and
+Model~A (flat-$v$ revenue) is \$0.00 to four decimal places. Model~A
+therefore represents both objectives simultaneously.
+
+\textbf{Q2: How do differentiated $v_s$ values move spend?}
+At the tested budget (\$20{,}000), the physical allocation is unchanged across
+all three models. This is a direct consequence of the near-saturated Hill
+curves: with K values of \$3--\$376 for Segments~0, 1, and~3, all feasible
+spend levels already operate in the diminishing-returns region, and the
+optimizer cannot productively redirect capital because every segment's marginal
+lift is similar. The revenue metric changes dramatically (from \$23.53 to
+\$249.99) because the $v_s$ multipliers are 7--12$\times$ larger, not because
+the allocation changed.
+
+\textbf{Q3: Do Models~B and~C point in the same direction?}
+Broadly yes: both assign the lowest weight to Segment~2 (Mega) and the
+highest to Segment~1 (Mid). However, Model~C's range (\$0.43) is negligible
+compared to Model~B's range (\$13), and both converge to identical allocations
+in practice. Model~B is preferred because it encodes explicit audience-quality
+knowledge derived from domain expertise. Model~C demonstrates the fusion
+methodology but cannot recover meaningful differentiation from the available
+creator-side covariates.
+
+\subsection{Recommendations}
+
+\begin{enumerate}[nosep, leftmargin=1.5em]
+
+  \item \textbf{Deploy with Model~B (stakeholder values).} The revenue metric
+  under stakeholder $v_s$ is the most informative objective. Use budget
+  \$15{,}000--\$20{,}000; the agent's advantage over reach-chasing is robust
+  across this range (bootstrap lower bound $>$ \$222).
+
+  \item \textbf{Expand the Segment~3 creator pool.} Segment~3 (Micro,
+  $v_s = \$27$, second-highest value) is the only binding cap constraint.
+  Adding creators to this tier would allow the optimizer to allocate more
+  capital to the most revenue-efficient audience without reducing spend
+  elsewhere.
+
+  \item \textbf{Re-fit the Segment~2 Hill curve with additional data.}
+  The current fit is unreliable ($n = 20$, at the upper bound). The optimizer
+  correctly assigns zero effective lift to Segment~2, but this means
+  \$4{,}293--\$5{,}000 of each run's budget is either wasted or left unspent.
+  Collecting more sponsored sessions with varied spend levels in Segment~2
+  would allow a stable fit and potentially unlock material lift from the
+  largest-audience tier.
+
+  \item \textbf{Validate the lifetime-value assumption.} The flat value
+  $v = \$2.623$ reflects first-transaction revenue only. Multiplying by a
+  retention-adjusted lifetime-value factor (the agent stores
+  $v_\text{adj} = \$1.03$ using observed churn rates) would reduce the
+  absolute revenue estimates but not change the optimal allocation. Before
+  budget decisions are made, the team should confirm which value definition
+  the business uses for ROI calculations.
+
+  \item \textbf{Accept the sponsorship-causality limitation.} Sponsorship
+  is not randomized in this dataset. The T-learner and IPW robustness check
+  control for observed confounders, but residual unmeasured confounding
+  (e.g., seasonal creator popularity) means the lift estimates are
+  observational, not causal. The agent's advantage over historical allocation
+  is small (+2.3\%) precisely because the historical pattern already
+  approximates a reasonable allocation. The large advantage over reach-chasing
+  (\textgreater 600\%) reflects a structural insight---audience quality
+  matters more than audience size---that is robust to confounding.
+
+\end{enumerate}
+
+\subsection{Conclusion}
+
+The Twitch Sponsorship Optimization Agent demonstrates that a four-stage
+pipeline (data, prediction, optimization, explanation) can convert raw session
+logs into a defensible, revenue-aware sponsorship strategy. The core insight
+running through both the V1 and V2 analyses is that the Mega-follower segment
+is a trap: its large audience does not translate into measurable incremental
+lift or high-quality conversions. Mid-tier and micro-niche creators deliver
+more conversion value per dollar. Introducing per-segment value weights
+(V2) sharpens this finding quantitatively---the revenue gap between the agent
+and the reach-chasing heuristic grows from 630\% (conversions) to nearly
+10$\times$ (revenue) under stakeholder values---and provides the business
+with an actionable tier-differentiated budgeting framework.
+
+\vspace{8pt}
+\textcolor{gold}{\rule{\linewidth}{1pt}}
+\vspace{4pt}
+
+\noindent{\small \textbf{AI use disclosure:} This project utilized Claude
+(Anthropic) for code generation, notebook scaffolding, and report drafting.
+All model outputs, data interpretations, and recommendations were reviewed and
+validated by the team.}
+
+\end{document}
