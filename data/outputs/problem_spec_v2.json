@@ -1,0 +1,89 @@
+{
+  "budget": null,
+  "segments": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "curve_params": {
+    "0": {
+      "V": 1.587626126091324,
+      "K": 6.208732350857271,
+      "n": 2.8321982301811093,
+      "fit_type": "hill"
+    },
+    "1": {
+      "V": 3.5250899867354217,
+      "K": 1.7865947247082645,
+      "n": 3.0158713503965227,
+      "fit_type": "hill"
+    },
+    "2": {
+      "V": 360.70912448646243,
+      "K": 10034.803279343856,
+      "n": 19.999999999999968,
+      "fit_type": "hill"
+    },
+    "3": {
+      "V": 11.968127225834136,
+      "K": 5384.650064142569,
+      "n": 0.5000005994165266,
+      "fit_type": "hill"
+    }
+  },
+  "caps": {
+    "0": 6173.0,
+    "1": 5978.0,
+    "2": 14612.0,
+    "3": 3846.0
+  },
+  "min_spend": 500.0,
+  "value_weight": 2.799591,
+  "value_weight_retention_adjusted": 1.104439,
+  "objective": "conversions",
+  "mode": "continuous",
+  "notes": {
+    "primary_uplift_estimator": "T-learner",
+    "loss": "count:poisson",
+    "ipw_clip_percentile": 99,
+    "player_value_model": "two-stage XGBoost (classifier + regressor)",
+    "spend_cap_rule": "99th percentile observed sp_cost per segment"
+  },
+  "value_weights_flat": {
+    "0": 2.799591,
+    "1": 2.799591,
+    "2": 2.799591,
+    "3": 2.799591
+  },
+  "value_weights_stakeholder": {
+    "2": 18.0,
+    "0": 22.0,
+    "1": 31.0,
+    "3": 27.0
+  },
+  "value_weights_fusion": {
+    "0": 0.8160874287551623,
+    "1": 1.24099702007965,
+    "2": 1.0413812192810443,
+    "3": 0.9537596138431605
+  },
+  "value_weights_fusion_alt": {
+    "0": 1.0177150417111904,
+    "1": 1.0161600251467875,
+    "2": 1.016933698877123,
+    "3": 1.0145847653721245
+  },
+  "tier_labels": {
+    "0": "Macro",
+    "1": "Mid",
+    "2": "Mega",
+    "3": "Micro"
+  },
+  "modification_notes": {
+    "phase1_mapping": "Segments ranked by median creator followers; Mega=rank1, Micro=rank4",
+    "phase2_bridge": "pmins (player engagement depth) <-> session duration (Twitch)",
+    "phase2_alt_bridge": "chat_rate_pm (player) <-> 5min_viewer_rate (Twitch)",
+    "phase2_finding": "Both bridges produce near-flat fusion estimates; segment duration distributions are similar across k-means clusters"
+  }
+}

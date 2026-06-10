@@ -1,0 +1,259 @@
+{
+  "budget": 20000.0,
+  "models": {
+    "A_flat": {
+      "allocation": {
+        "0": {
+          "spend": 3869.633722214211,
+          "lift": 1.5876261067850919,
+          "revenue": 4.444703759920582,
+          "funded": true,
+          "vs": 2.799591
+        },
+        "1": {
+          "spend": 2194.3921987602616,
+          "lift": 3.525089985036105,
+          "revenue": 9.868810196297215,
+          "funded": true,
+          "vs": 2.799591
+        },
+        "2": {
+          "spend": 4292.997150152224,
+          "lift": 1.5212193893312634e-05,
+          "revenue": 4.258792111397301e-05,
+          "funded": true,
+          "vs": 2.799591
+        },
+        "3": {
+          "spend": 3846.0,
+          "lift": 5.481810109787089,
+          "revenue": 15.346826247068947,
+          "funded": true,
+          "vs": 2.799591
+        }
+      },
+      "objective_value": 29.66038279120786,
+      "solver_winner": "dual annealing",
+      "value_weights": {
+        "0": 2.799591,
+        "1": 2.799591,
+        "2": 2.799591,
+        "3": 2.799591
+      }
+    },
+    "B_stakeholder": {
+      "allocation": {
+        "0": {
+          "spend": 4777.631256687529,
+          "lift": 1.587626115463845,
+          "revenue": 34.92777454020459,
+          "funded": true,
+          "vs": 22.0
+        },
+        "1": {
+          "spend": 0.0,
+          "lift": 0.0,
+          "revenue": 0.0,
+          "funded": false,
+          "vs": 31.0
+        },
+        "2": {
+          "spend": 2925.8562650136823,
+          "lift": 7.1127838655898386e-09,
+          "revenue": 1.280301095806171e-07,
+          "funded": true,
+          "vs": 18.0
+        },
+        "3": {
+          "spend": 3846.0,
+          "lift": 5.481810109787089,
+          "revenue": 148.0088729642514,
+          "funded": true,
+          "vs": 27.0
+        }
+      },
+      "objective_value": 182.93664763248609,
+      "solver_winner": "basin-hopping",
+      "value_weights": {
+        "2": 18.0,
+        "0": 22.0,
+        "1": 31.0,
+        "3": 27.0
+      }
+    },
+    "C_fusion": {
+      "allocation": {
+        "0": {
+          "spend": 3869.728618542957,
+          "lift": 1.5876261067864326,
+          "revenue": 1.2956417073119084,
+          "funded": true,
+          "vs": 0.8160874287551623
+        },
+        "1": {
+          "spend": 2194.3921987602616,
+          "lift": 3.525089985036105,
+          "revenue": 4.3746261669424245,
+          "funded": true,
+          "vs": 1.24099702007965
+        },
+        "2": {
+          "spend": 4293.20499007832,
+          "lift": 1.5226930244607367e-05,
+          "revenue": 1.585703918403663e-05,
+          "funded": true,
+          "vs": 1.0413812192810443
+        },
+        "3": {
+          "spend": 3846.0,
+          "lift": 5.481810109787089,
+          "revenue": 5.228329093472068,
+          "funded": true,
+          "vs": 0.9537596138431605
+        }
+      },
+      "objective_value": 10.898612824765586,
+      "solver_winner": "dual annealing",
+      "value_weights": {
+        "0": 0.8160874287551623,
+        "1": 1.24099702007965,
+        "2": 1.0413812192810443,
+        "3": 0.9537596138431605
+      }
+    }
+  },
+  "comparison_table": [
+    {
+      "model": "A_flat",
+      "segment": 0,
+      "tier": "Macro",
+      "vs": 2.799591,
+      "spend": 3869.633722214211,
+      "delta_vs_A": 0.0,
+      "lift": 1.5876261067850919,
+      "revenue": 4.444703759920582,
+      "funded": true
+    },
+    {
+      "model": "A_flat",
+      "segment": 1,
+      "tier": "Mid",
+      "vs": 2.799591,
+      "spend": 2194.3921987602616,
+      "delta_vs_A": 0.0,
+      "lift": 3.525089985036105,
+      "revenue": 9.868810196297215,
+      "funded": true
+    },
+    {
+      "model": "A_flat",
+      "segment": 2,
+      "tier": "Mega",
+      "vs": 2.799591,
+      "spend": 4292.997150152224,
+      "delta_vs_A": 0.0,
+      "lift": 1.5212193893312634e-05,
+      "revenue": 4.258792111397301e-05,
+      "funded": true
+    },
+    {
+      "model": "A_flat",
+      "segment": 3,
+      "tier": "Micro",
+      "vs": 2.799591,
+      "spend": 3846.0,
+      "delta_vs_A": 0.0,
+      "lift": 5.481810109787089,
+      "revenue": 15.346826247068947,
+      "funded": true
+    },
+    {
+      "model": "B_stakeholder",
+      "segment": 0,
+      "tier": "Macro",
+      "vs": 22.0,
+      "spend": 4777.631256687529,
+      "delta_vs_A": 907.9975344733175,
+      "lift": 1.587626115463845,
+      "revenue": 34.92777454020459,
+      "funded": true
+    },
+    {
+      "model": "B_stakeholder",
+      "segment": 1,
+      "tier": "Mid",
+      "vs": 31.0,
+      "spend": 0.0,
+      "delta_vs_A": -2194.3921987602616,
+      "lift": 0.0,
+      "revenue": 0.0,
+      "funded": false
+    },
+    {
+      "model": "B_stakeholder",
+      "segment": 2,
+      "tier": "Mega",
+      "vs": 18.0,
+      "spend": 2925.8562650136823,
+      "delta_vs_A": -1367.1408851385418,
+      "lift": 7.1127838655898386e-09,
+      "revenue": 1.280301095806171e-07,
+      "funded": true
+    },
+    {
+      "model": "B_stakeholder",
+      "segment": 3,
+      "tier": "Micro",
+      "vs": 27.0,
+      "spend": 3846.0,
+      "delta_vs_A": 0.0,
+      "lift": 5.481810109787089,
+      "revenue": 148.0088729642514,
+      "funded": true
+    },
+    {
+      "model": "C_fusion",
+      "segment": 0,
+      "tier": "Macro",
+      "vs": 0.8160874287551623,
+      "spend": 3869.728618542957,
+      "delta_vs_A": 0.09489632874601739,
+      "lift": 1.5876261067864326,
+      "revenue": 1.2956417073119084,
+      "funded": true
+    },
+    {
+      "model": "C_fusion",
+      "segment": 1,
+      "tier": "Mid",
+      "vs": 1.24099702007965,
+      "spend": 2194.3921987602616,
+      "delta_vs_A": 0.0,
+      "lift": 3.525089985036105,
+      "revenue": 4.3746261669424245,
+      "funded": true
+    },
+    {
+      "model": "C_fusion",
+      "segment": 2,
+      "tier": "Mega",
+      "vs": 1.0413812192810443,
+      "spend": 4293.20499007832,
+      "delta_vs_A": 0.2078399260963124,
+      "lift": 1.5226930244607367e-05,
+      "revenue": 1.585703918403663e-05,
+      "funded": true
+    },
+    {
+      "model": "C_fusion",
+      "segment": 3,
+      "tier": "Micro",
+      "vs": 0.9537596138431605,
+      "spend": 3846.0,
+      "delta_vs_A": 0.0,
+      "lift": 5.481810109787089,
+      "revenue": 5.228329093472068,
+      "funded": true
+    }
+  ]
+}

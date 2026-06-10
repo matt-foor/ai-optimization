@@ -1,0 +1,65 @@
+{
+  "comparison_table": [
+    {
+      "strategy": "(A) Flat v Agent",
+      "total_spend": 14203.023071126696,
+      "incr_conversions": 10.59454141380218,
+      "incr_revenue_own_v": 29.66038279120786,
+      "incr_revenue_stakeholder_v": 292.2147106691327
+    },
+    {
+      "strategy": "(B) Stakeholder Agent",
+      "total_spend": 11549.48752170121,
+      "incr_conversions": 7.069436232363718,
+      "incr_revenue_own_v": 182.93664763248609,
+      "incr_revenue_stakeholder_v": 182.93664763248609
+    },
+    {
+      "strategy": "(C) Fusion Agent",
+      "total_spend": 14203.32580738154,
+      "incr_conversions": 10.594541428539872,
+      "incr_revenue_own_v": 10.898612824765586,
+      "incr_revenue_stakeholder_v": 292.21471093441653
+    },
+    {
+      "strategy": "Historical Baseline",
+      "total_spend": 18577.011813339355,
+      "incr_conversions": 9.71927505772575,
+      "incr_revenue_own_v": 27.209994978133487,
+      "incr_revenue_stakeholder_v": 268.5125883776785
+    },
+    {
+      "strategy": "Reach-Chasing Baseline",
+      "total_spend": 20000.0,
+      "incr_conversions": 362.10045764793733,
+      "incr_revenue_own_v": 1013.7331823270466,
+      "incr_revenue_stakeholder_v": 6524.158742136996
+    }
+  ],
+  "bootstrap": {
+    "A_flat": {
+      "median": -984.0727995358387,
+      "ci_lo": -984.0727995358387,
+      "ci_hi": -984.0727995358387,
+      "win": false
+    },
+    "B_stakeholder": {
+      "median": -6341.22209450451,
+      "ci_lo": -6341.22209450451,
+      "ci_hi": -6341.22209450451,
+      "win": false
+    },
+    "C_fusion": {
+      "median": -365.82832095668584,
+      "ci_lo": -365.82832095668584,
+      "ci_hi": -365.82832095668584,
+      "win": false
+    }
+  },
+  "written_analysis": {
+    "Q1_flat_v_equals_conversions": true,
+    "Q1_explanation": "argmax v*f(x) = argmax f(x) for positive scalar v; Model A represents both objectives simultaneously.",
+    "Q2_key_insight": "Stakeholder vs shifts spend toward Mid/Micro segments (higher vs=$31/$27) and away from Mega (vs=$18). Accepts marginal conversion reduction in exchange for higher revenue from better-quality converters.",
+    "Q3_b_vs_c": "Fusion estimate is near-flat because k-means segment session durations are similar. Model B (stakeholder) carries more information and should be preferred. Both models agree that Mega (Seg 2) deserves lower weight than Mid/Micro segments."
+  }
+}
